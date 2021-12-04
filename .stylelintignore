@@ -1,0 +1,6 @@
+coverage
+test
+cache
+node_modules
+.npm
+.next

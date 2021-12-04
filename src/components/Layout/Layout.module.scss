@@ -1,0 +1,9 @@
+.layout {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100%;
+
+  @media (max-width: 960px) {
+    padding: 0 16px;
+  }
+}

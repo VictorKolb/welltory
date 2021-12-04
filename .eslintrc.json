@@ -1,0 +1,818 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "extends": ["plugin:@typescript-eslint/recommended", "next", "prettier"],
+  "plugins": [
+    "@typescript-eslint",
+    "react",
+    "react-hooks",
+    "import",
+    "prettier"
+  ],
+  // Игнорим файлы, не нуждающиеся в линте
+  "ignorePatterns": [
+    "node_modules",
+    "webpack*",
+    "tests/**",
+    "postcss*",
+    "jest*",
+    "build/**/*",
+    "lib/**/*",
+    "config/**/*",
+    "scripts/**/*",
+    "public/**/*",
+    "lighthouserc.js",
+    "*.html"
+  ],
+  "settings": {
+    "react": {
+      "createClass": "createReactClass", // Regex for Component Factory to use,
+      // default to "createReactClass"
+      "pragma": "React", // Pragma to use, default to "React"
+      "fragment": "Fragment", // Fragment to use (may be a property of <pragma>), default to "Fragment"
+      "version": "detect", // React version. "detect" automatically picks the version you have installed.
+      // You can also use `16.0`, `16.3`, etc, if you want to override the detected value.
+      // default to latest and warns if missing
+      // It will default to "detect" in the future
+      "flowVersion": "0.53" // Flow version
+    },
+    "propWrapperFunctions": [
+      // The names of any function used to wrap propTypes, e.g. `forbidExtraProps`. If this isn't set, any propTypes wrapped in a function will be skipped.
+      "forbidExtraProps",
+      {
+        "property": "freeze",
+        "object": "Object"
+      },
+      {
+        "property": "myFavoriteWrapper"
+      }
+    ],
+    "linkComponents": [
+      // Components used as alternatives to <a> for linking, eg. <Link to={ url } />
+      "Hyperlink",
+      {
+        "name": "Link",
+        "linkAttribute": "to"
+      }
+    ]
+  },
+  "rules": {
+    "prettier/prettier": [
+      "error",
+      {
+        "singleQuote": true,
+        "trailingComma": "all",
+        "printWidth": 80,
+        "tabWidth": 2,
+        "useTabs": false,
+        "semi": true,
+        "jsxSingleQuote": false,
+        "bracketSpacing": true,
+        "arrowParens": "avoid",
+        "importOrder": [
+          "^constants",
+          "^components",
+          "^(graphql|utils)",
+          "^[./].*(?<!\\.scss)$",
+          "^styles",
+          "\\.scss$"
+        ],
+        "importOrderSeparation": true
+      }
+    ],
+    /**
+     * КОНФИГИ ИЗ typescript-selint пакета
+     * https://github.com/typescript-eslint/typescript-eslint/tree/v4.10.0/packages/eslint-plugin/docs/rules
+     */
+
+    // Оповещаем что @ts-ignore использовать не рекомендуется
+    "@typescript-eslint/ban-ts-comment": ["warn"],
+
+    // Отступы в 2 пробела с разными под правилами
+    "indent": "off",
+    "@typescript-eslint/indent": "off",
+
+    // TODO: Временно отключил проверку пока не стабилдизируем разработку
+    "@typescript-eslint/no-explicit-any": "off",
+
+    // "import/order": [
+    //   "warn",
+    //   {
+    //     "groups": [
+    //       "type",
+    //       "builtin",
+    //       "external",
+    //       "internal"
+    //     ],
+    //     "pathGroups": [{
+    //         "pattern": "*/*.scss",
+    //         "group": "internal",
+    //         "position": "after"
+    //       },
+    //       {
+    //         "pattern": "*/*.svg",
+    //         "group": "internal",
+    //         "position": "after"
+    //       },
+    //       {
+    //         "pattern": "*/Icon.tsx",
+    //         "group": "internal",
+    //         "position": "after"
+    //       },
+    //       {
+    //         "pattern": "./*types",
+    //         "group": "type",
+    //         "position": "after"
+    //       }
+    //     ]
+    //   }
+    // ],
+
+    // Точки с запятой в конце строки обязательны вызде
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/semi.md
+    "semi": "off",
+    "@typescript-eslint/semi": ["warn"],
+
+    // Пробел в определении функции перед скобакми
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/space-before-function-paren.md
+    "space-before-function-paren": "off",
+    "@typescript-eslint/space-before-function-paren": [
+      "error",
+      {
+        "anonymous": "always",
+        "named": "never",
+        "asyncArrow": "always"
+      }
+    ],
+
+    // TODO: Обсудить, просянить что тип возвращаемого значения надо писать, поэтому before: false
+    // Как отбивать пробелами стрелочные функции
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/type-annotation-spacing.md
+    "@typescript-eslint/type-annotation-spacing": ["off"],
+
+    // Отбивка пробелами значений в объектах и прочее такое
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/space-infix-ops.md
+    "space-infix-ops": "off",
+    "@typescript-eslint/space-infix-ops": [
+      "warn",
+      {
+        "int32Hint": false
+      }
+    ],
+    "@next/next/no-img-element": ["off"],
+
+    // TODO: Обсудить, спорно
+    // Переменные объявлять в самом начале
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/init-declarations.md
+    "init-declarations": "off",
+    "@typescript-eslint/init-declarations": ["warn", "always"],
+
+    // TODO: Обсудить, спорно
+    // Линтинг типов, с позволением использовать any
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/explicit-module-boundary-types.md
+    "@typescript-eslint/explicit-module-boundary-types": [
+      "off",
+      {
+        "allowArgumentsExplicitlyTypedAsAny": true
+      }
+    ],
+
+    // Отбивка пробелами ключевых элементов, например " () => ", " else "
+    "keyword-spacing": "off",
+    "@typescript-eslint/keyword-spacing": [
+      "error",
+      {
+        "before": true,
+        "after": true
+      }
+    ],
+
+    // Используем одинарные кавычки везде
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/quotes.md
+    "quotes": [
+      "error",
+      "single",
+      { "avoidEscape": true, "allowTemplateLiterals": true }
+    ],
+    "@typescript-eslint/quotes": "off",
+
+    // TODO: Обсудить, спорно
+    // Требуется указывать какую структуру вернет функция
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/explicit-function-return-type.md
+    "@typescript-eslint/explicit-function-return-type": ["off"],
+
+    // Неиспользуемые переменные подсвечиваем, чтобы удалять
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-unused-vars.md
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": ["error"],
+
+    // Объявления массивов через [], а не <>
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/array-type.md
+    "@typescript-eslint/array-type": ["warn"],
+
+    // Запрещаяем объявлять некоторые типы и даем пояснения какие типы использовать вместо них
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/ban-types.md
+    "@typescript-eslint/ban-types": [
+      "warn",
+      {
+        "types": {
+          // add a custom message, AND tell the plugin how to fix it
+          "String": {
+            "message": "Используйте string вместо String",
+            "fixWith": "string"
+          },
+          "{}": {
+            "message": "Используйте object вместо {}",
+            "fixWith": "object"
+          }
+        }
+      }
+    ],
+
+    // Как переносить фигурные скобки в if else конструкции.
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/brace-style.md
+    "brace-style": "off",
+    "@typescript-eslint/brace-style": ["warn"],
+
+    // Имена переменных пишем по конвенции именования
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/naming-convention.md
+    "camelcase": "off",
+    "@typescript-eslint/naming-convention": [
+      "warn",
+      // Для headers разрешаем написание через дефис
+      {
+        "selector": "property",
+        "format": ["PascalCase"],
+        "filter": {
+          // you can expand this regex to add more allowed names
+          "regex": "[-]",
+          "match": true
+        }
+      },
+      // Дефолтные требования
+      {
+        "selector": "default",
+        "leadingUnderscore": "allow",
+        "format": ["camelCase", "UPPER_CASE", "PascalCase", "snake_case"]
+      },
+      // Функции и компоненты
+      {
+        "selector": "variable",
+        "types": ["function"],
+        "format": ["PascalCase", "camelCase"]
+      },
+      // Класс
+      {
+        "selector": "typeLike",
+        "format": ["PascalCase", "camelCase"]
+      },
+      // Литералы в объекте
+      {
+        "selector": "objectLiteralProperty",
+        "format": ["PascalCase", "camelCase", "snake_case"]
+      },
+      // Булевы с префиксом
+      //      {
+      //        "selector": "variable",
+      //        "types": ["boolean"],
+      //        "format": ["PascalCase"],
+      //        "prefix": ["is", "should", "has", "can", "did", "will"]
+      //      },
+      // Все интерфейсы должны именоваться с "I" вначале
+      {
+        "selector": "interface",
+        "format": ["PascalCase"],
+        "custom": {
+          "regex": "^I[A-Z]||^[A-Z]Action",
+          "match": true
+        }
+      },
+      // Объвяления типа
+      {
+        "selector": "typeAlias",
+        "format": ["PascalCase"]
+      },
+      // Параметры в типе и интерфейсе
+      {
+        "selector": "typeProperty",
+        "format": ["PascalCase", "camelCase", "UPPER_CASE", "snake_case"]
+      }
+    ],
+
+    // Обработчики событий именуются как "handleEventName", а их пропсы как "onEventName"
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-handler-names.md
+    "react/jsx-handler-names": [
+      "error",
+      {
+        "eventHandlerPrefix": "handle",
+        "eventHandlerPropPrefix": "on"
+      }
+    ],
+
+    // В объектах каждую строку заканчивать запятой, ставим требование только для мультистрок
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/comma-dangle.md
+    "comma-dangle": "off",
+    "@typescript-eslint/comma-dangle": [
+      "warn",
+      {
+        "arrays": "only-multiline",
+        "objects": "only-multiline",
+        "imports": "only-multiline",
+        "exports": "only-multiline",
+        "functions": "only-multiline",
+        "generics": "only-multiline",
+        "tuples": "only-multiline",
+        "enums": "only-multiline"
+      }
+    ],
+
+    // Отступы в перечислениях. Неправильно: "const foo = 1 , bar = 2;"
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/comma-spacing.md
+    "comma-spacing": "off",
+    "@typescript-eslint/comma-spacing": ["warn"],
+
+    // Интерфейсы объявляем как interface, а не как type. Ради единообразности
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/consistent-type-definitions.md
+    "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
+
+    // Импорт типов идет с ключевым словом type для наглядности
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/consistent-type-imports.md
+    "@typescript-eslint/consistent-type-imports": [
+      "error",
+      {
+        "prefer": "type-imports"
+      }
+    ],
+
+    // Требование прописывать доступность переменной private/public
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/explicit-member-accessibility.md
+    "@typescript-eslint/explicit-member-accessibility": ["off"],
+
+    // Обязательно вроверять то, что может быть null
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-unsafe-call.md
+    "@typescript-eslint/no-unsafe-call": ["off"],
+
+    // Не позволять обращаться небезопасно к свойству объекта
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-unsafe-member-access.md
+    "@typescript-eslint/no-unsafe-member-access": ["off"],
+
+    // Не делать пробел между названием функции и скобками
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/func-call-spacing.md
+    "@typescript-eslint/func-call-spacing": ["error"],
+
+    // Требует отбивать энтерами методы класса, кроме объявления оверлоадов методов
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/lines-between-class-members.md
+    "lines-between-class-members": "off",
+    "@typescript-eslint/lines-between-class-members": [
+      "error",
+      {
+        "exceptAfterOverload": true
+      }
+    ],
+
+    // TODO: Обсудить как лучше. В строку лучше смотрятся запятые, в мульти точки с запятой, и непонятно как автоисправлять преттиером
+    // Разделитель в интерфейсах. Устанавливается мягкое правило - либо запятые, зибо точки с запятой
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/member-delimiter-style.md
+    "@typescript-eslint/member-delimiter-style": [
+      "error",
+      {
+        "multiline": {
+          "delimiter": "semi",
+          "requireLast": true
+        },
+        "singleline": {
+          "delimiter": "semi",
+          "requireLast": false
+        }
+      }
+    ],
+
+    // TODO: Обсудить ставим ли мы правила сортировки по алфавиту, группировки, или никак не линтим
+    // Сортировка методов и прочего в классах
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/member-ordering.md
+    "@typescript-eslint/member-ordering": [
+      "warn",
+      {
+        "default": ["constructor", "field", "signature", "method"]
+      }
+    ],
+
+    // Сразу видим где нам придет [object Object]
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-base-to-string.md
+    "@typescript-eslint/no-base-to-string": ["warn"],
+
+    // Проверяем что в return не вписано что-то типа "return console.error('Nothing to do!');"
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-confusing-void-expression.md
+    "@typescript-eslint/no-confusing-void-expression": ["warn"],
+
+    // Не разрешать повторые импорты
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-duplicate-imports.md
+    "no-duplicate-imports": "off",
+    "@typescript-eslint/no-duplicate-imports": ["error"],
+
+    // Запрет на .delete() из объектов - чтобы не мутировать объект
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-dynamic-delete.md
+    "@typescript-eslint/no-dynamic-delete": ["error"],
+
+    // Не оставлять пустые функции
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-empty-function.md
+    "no-empty-function": "off",
+    "@typescript-eslint/no-empty-function": ["warn"],
+
+    // Не оставлять пустые интерфейсы
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-empty-interface.md
+    "@typescript-eslint/no-empty-interface": ["warn"],
+
+    // TODO: Обсудить, все ли согласны что удобно
+    // Просим использовать всех optional chain вместо стандартной старой проверки
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/prefer-optional-chain.md
+    "@typescript-eslint/prefer-optional-chain": ["warn"],
+
+    // Не делать лишних проверок на null в объекте
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-extra-non-null-assertion.md
+    "@typescript-eslint/no-extra-non-null-assertion": ["warn"],
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-non-null-asserted-optional-chain.md
+    "@typescript-eslint/no-non-null-asserted-optional-chain": ["warn"],
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-non-null-assertion.md
+    "@typescript-eslint/no-non-null-assertion": ["warn"],
+
+    // Для передаваемых типов где явно не может быть null не надо писать дополнительных проверок
+    "@typescript-eslint/no-unnecessary-condition": ["off"],
+
+    // Без лишних обертываний скобками в вычислениях и условных операторах
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-extra-parens.md
+    // Конфликтует с react/jsx-wrap-multilines, отключено
+    "no-extra-parens": "off",
+    "@typescript-eslint/no-extra-parens": ["off"],
+
+    // Проверять что нет двойных точек с запятой
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-extra-semi.md
+    "no-extra-semi": "off",
+    "@typescript-eslint/no-extra-semi": ["error"],
+
+    // Запрет на eval
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-implied-eval.md
+    "no-implied-eval": "off",
+    "@typescript-eslint/no-implied-eval": ["error"],
+
+    // Использование this без ошибок. Говорим, если используется this не из той области видимости
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-invalid-this.md
+    "no-invalid-this": "off",
+    "@typescript-eslint/no-invalid-this": ["error"],
+
+    // Неправильное использование void
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-invalid-void-type.md
+    "@typescript-eslint/no-invalid-void-type": ["error"],
+
+    // Проверка на бесконечный цикл
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-loop-func.md
+    "no-loop-func": "off",
+    "@typescript-eslint/no-loop-func": ["error"],
+
+    // Проблемы чисел с плавающей точкой
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-loss-of-precision.md
+    "no-loss-of-precision": "off",
+    "@typescript-eslint/no-loss-of-precision": ["error"],
+
+    // Требовать правильное определение new и конструктора
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-misused-new.md
+    "@typescript-eslint/no-misused-new": "error",
+
+    // Запрет на повторное переобъявление класса/переменной
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-redeclare.md
+    "no-redeclare": "off",
+    "@typescript-eslint/no-redeclare": ["error"],
+
+    // Запрет на require в импортах
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-require-imports.md
+    "@typescript-eslint/no-require-imports": ["error"],
+
+    // Не позволяет назвать переменную как переменную из внешней области видимости
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-shadow.md
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": ["error"],
+
+    // Запрет на self в коде
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-this-alias.md
+    "@typescript-eslint/no-this-alias": ["error"],
+
+    // Запрещает возвращать в ошибке ерунду, заставляет писать throw new Error("error");
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-throw-literal.md
+    "no-throw-literal": "off",
+    "@typescript-eslint/no-throw-literal": ["error"],
+
+    // Запрет на бесполезные выражения
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-unused-expressions.md
+    "no-unused-expressions": "off",
+    "@typescript-eslint/no-unused-expressions": ["error"],
+
+    // Заставляет объявлять классы/функции ПЕРЕД использованием
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-use-before-define.md
+    "no-use-before-define": "off",
+    "@typescript-eslint/no-use-before-define": ["off"],
+
+    // Запрет на пустые конструкторы
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-useless-constructor.md
+    "no-useless-constructor": "off",
+    "@typescript-eslint/no-useless-constructor": ["error"],
+
+    // Запрет на var name = require(). Выше мы проверяем вообще что нет реквайра, добавим запрет на var
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/no-var-requires.md
+    "@typescript-eslint/no-var-requires": ["error"],
+
+    // TODO: Обсудить, может и сторовые массивы тоже надо
+    // При использовании sort всегда писать функцию сортировки, а не доверять функции по-умолчанию (крое строковых массивов)
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/require-array-sort-compare.md
+    "@typescript-eslint/require-array-sort-compare": [
+      "error",
+      {
+        "ignoreStringArrays": true
+      }
+    ],
+
+    // Для асинхронных функций обязательно требуем await
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/require-await.md
+    "require-await": "off",
+    "@typescript-eslint/require-await": "error",
+
+    // Приведение к типу через +name - в топку
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/restrict-plus-operands.md
+    "@typescript-eslint/restrict-plus-operands": "error",
+
+    // Запрет своеобразного eval. Например, объявления переменной через вызов строки типа "const msg2 = `arg = ${arg || 'default'}`;"
+    // Коммент: Если бы я такое в коде увидел - сразу попросил бы техдира уволить на месте
+    // https://github.com/typescript-eslint/typescript-eslint/blob/v4.10.0/packages/eslint-plugin/docs/rules/restrict-template-expressions.md
+    "@typescript-eslint/restrict-template-expressions": "error",
+
+    /**
+     * КОНФИГИ ИЗ eslint-plugin-react пакета
+     * https://github.com/yannickcr/eslint-plugin-react
+     */
+
+    // Запрет на deprecated методы
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-deprecated.md
+    "react/no-deprecated": ["error"],
+
+    // Проверка что булевы пропсы именуются как is и has
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/boolean-prop-naming.md
+    "react/boolean-prop-naming": [
+      "warn",
+      {
+        "rule": "^(is|has)[A-Z]([A-Za-z0-9]?)+"
+      }
+    ],
+
+    // Проверка на то, что кнопки имеют тип
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/button-has-type.md
+    "react/button-has-type": [
+      "warn",
+      {
+        "button": true,
+        "submit": true,
+        "reset": true
+      }
+    ],
+
+    // Запрет на React.createElement (Но даже не знаю кому бы это могло понадобиться)
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/forbid-elements.md
+    "react/forbid-elements": ["error"],
+
+    // В Next.js проектах не нужна данная проверка
+    "react/react-in-jsx-scope": ["off"],
+
+    // Булевы значения в пропсах писать по простому, без указания propName={propValue} (пишем просто propName)
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-boolean-value.md
+    "react/jsx-boolean-value": ["warn"],
+
+    // Отбивать пробелы в тексте компонента через {' '}, а не пробелом
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-child-element-spacing.md
+    // Отключено как генерирующее бредовые правила
+    "react/jsx-child-element-spacing": ["off"],
+
+    // Как переносить самозакрывающийся тэг с пропсами
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-closing-bracket-location.md
+    "react/jsx-closing-bracket-location": ["warn", "tag-aligned"],
+
+    // Как закрывать НЕ самозакрывающийся тэг
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-closing-tag-location.md
+    "react/jsx-closing-tag-location": ["warn", "tag-aligned"],
+
+    // Не передавать строковые пропсы через {""}, а передавать напрямую как ""
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-curly-brace-presence.md
+    "react/jsx-curly-brace-presence": [
+      "warn",
+      {
+        "props": "never",
+        "children": "never"
+      }
+    ],
+
+    // Переносы в фигурных скобках (внутри тегов). Просим на одной линии или одной строкой компоновать
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-curly-newline.md
+    "react/jsx-curly-newline": [
+      "warn",
+      {
+        "multiline": "consistent",
+        "singleline": "consistent"
+      }
+    ],
+
+    // Отступы внутри фигурных скобок
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-curly-spacing.md
+    "react/jsx-curly-spacing": [
+      "warn",
+      {
+        "when": "never",
+        "children": true
+      }
+    ],
+
+    // Отступы от фишурных скобок в пропсах
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-equals-spacing.md
+    "react/jsx-equals-spacing": ["warn", "never"],
+
+    // JSX синтаксис разрешается в jsx и tsx файлах
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-filename-extension.md
+    "react/jsx-filename-extension": [
+      "error",
+      {
+        "extensions": [".jsx", ".tsx"]
+      }
+    ],
+
+    // Переносы пропсов либо в строку, либо один по другим. Смешнно нельзя
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-first-prop-new-line.md
+    "react/jsx-first-prop-new-line": ["warn", "multiline"],
+
+    // JSX фрагменты объявляем как <></>, а не <React.Fragment>
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-fragments.md
+    "react/jsx-fragments": ["warn", "syntax"],
+
+    // Отступы пропсов
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-indent-props.md
+    "react/jsx-indent-props": ["warn", 2],
+
+    // Key в map обязателен
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-key.md
+    "react/jsx-key": ["error"],
+
+    // Максимальная грубина JSX верстки в нодах
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-max-depth.md
+    "react/jsx-max-depth": [
+      "error",
+      {
+        "max": 6
+      }
+    ],
+
+    // Максимальное количество пропс, которые можно написать в одну строку
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-max-props-per-line.md
+    // "react/jsx-max-props-per-line": ["warn", {
+    //   "maximum": 4
+    // }],
+
+    // Запрет странных комментариев в JSX, не таких: {/* */}
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-no-comment-textnodes.md
+    "react/jsx-no-comment-textnodes": ["error"],
+
+    // Проверка на дублирование пропса
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-no-duplicate-props.md
+    "react/jsx-no-duplicate-props": [
+      "warn",
+      {
+        "ignoreCase": true
+      }
+    ],
+
+    // Запрет на использование "javascript:void()" в ссылках (реакт сыпет варнинги про это)
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-no-script-url.md
+    "react/jsx-no-script-url": ["warn"],
+
+    // Запрет на target="_blank" без rel="noreferrer noopener"
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-no-target-blank.md
+    "react/jsx-no-target-blank": ["warn"],
+
+    // Запрет на необъявленные переменные
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-no-undef.md
+    "react/jsx-no-undef": [
+      "error",
+      {
+        "allowGlobals": true
+      }
+    ],
+
+    // Не использовать бесполезные фрагменты
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-no-useless-fragment.md
+    "react/jsx-no-useless-fragment": ["warn"],
+
+    // Одно выражение на 1 строку. Не использовать склеки типа {'Hello'}{' '}{'World'}
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-one-expression-per-line.md
+    // Отключено, так как генерирует бредовые требования
+    "react/jsx-one-expression-per-line": ["off"],
+
+    // Не отбивать пропсы дополнительными строчками при мультилинии
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-props-no-multi-spaces.md
+    "react/jsx-props-no-multi-spaces": ["warn"],
+
+    // При закрытии тега проверять что есть пробел перед "/>"
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-space-before-closing.md
+    // DEPRECATED
+    "react/jsx-space-before-closing": ["off"],
+
+    // Проверка на закрытие тегов
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-tag-spacing.md
+    "react/jsx-tag-spacing": [
+      "warn",
+      {
+        "closingSlash": "never",
+        "beforeSelfClosing": "always",
+        "afterOpening": "never",
+        "beforeClosing": "allow"
+      }
+    ],
+
+    // Проверка что был произведен импорт реакта в файле
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-uses-react.md
+    "react/jsx-uses-react": ["warn"],
+
+    // Многонодные компоненты обязательно должны быть обернуть в корневой div или фрагмент.
+    // Правила как переносить обертки
+    "react/jsx-wrap-multilines": [
+      "warn",
+      {
+        "declaration": "parens",
+        "assignment": "parens",
+        "return": "parens",
+        "arrow": "parens",
+        "condition": "ignore",
+        "logical": "ignore",
+        "prop": "ignore"
+      }
+    ],
+
+    // Запрет использовать в качестве ключа элемента в массиве индекс массива
+    // Для тебя, Кирилл :)
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-array-index-key.md
+    "react/no-array-index-key": ["warn"],
+
+    // Запрет на использование пропса children (причины не понимаю, но вроде как внутреннее устройство React.createElement)
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-children-prop.md
+    "react/no-children-prop": ["error"],
+
+    // Не разрешать одновременно использовать дочерние компоненты или текст вместе с dangerouslySetInnerHTML
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-danger-with-children.md
+    "react/no-danger-with-children": ["error"],
+
+    // Запрет на прямую мутацию стейта, например this.state.name = 'Hello'
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-direct-mutation-state.md
+    "react/no-direct-mutation-state": ["error"],
+
+    // Запрет на findDOMNode
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-find-dom-node.md
+    "react/no-find-dom-node": ["error"],
+
+    // Запрет на isMounted
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-is-mounted.md
+    "react/no-is-mounted": ["error"],
+
+    // Нельзя использовать результат return от ReactDOM.render
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-render-return-value.md
+    "react/no-render-return-value": ["error"],
+
+    // Не использовать this.props. Делать деструктуризацию перед рендером
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-this-in-sfc.md
+    "react/no-this-in-sfc": ["error"],
+
+    // Проверка на неправильное написание встроенных методов реакт, например, написания с маленькои или большой буквы существующих методов
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-typos.md
+    "react/no-typos": ["error"],
+
+    // Проверка на эскейпинг. Чтобы не сломать пропсы
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-unescaped-entities.md
+    "react/no-unescaped-entities": ["error"],
+
+    // Проверяет что свойства переданные в дом ноде валидны для реакта, написаны в camelCase и т.п
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-unknown-property.md
+    "react/no-unknown-property": ["warn"],
+
+    // Если внутри тега ничего нет - требуется переписать его на самозакрывающийся
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/self-closing-comp.md
+    "react/self-closing-comp": ["warn"],
+
+    // Обязывает style прос быть объектом
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/style-prop-object.md
+    "react/style-prop-object": ["warn"],
+
+    // Запрещает самозакрывающимся нодам (<br /> <imf />)принимать дочерние элементы
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/void-dom-elements-no-children.md
+    "react/void-dom-elements-no-children": ["warn"],
+
+    // Отключение propTypes
+    "react/prop-types": ["off"]
+  }
+}

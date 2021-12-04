@@ -1,0 +1,9 @@
+# Created by .ignore support plugin (hsz.mobi)
+/cypress/
+src/styles/**
+next.config.js
+sentry.client.config.js
+sentry.server.config.js
+/server/
+/test/editor/
+graphql.tsx

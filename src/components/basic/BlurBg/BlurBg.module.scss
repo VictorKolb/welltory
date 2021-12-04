@@ -1,0 +1,46 @@
+.red {
+  position: absolute;
+  width: 728.55px;
+  height: 902.83px;
+  left: 1497.17px;
+  top: 618.95px;
+  background: #ff6060;
+  opacity: 0.46;
+  filter: blur(175.389px);
+  transform: matrix(0, 1, 1, 0, 0, 0);
+}
+
+.blue {
+  position: absolute;
+  width: 123.92px;
+  height: 100px;
+  left: 0px;
+  top: 426.79px;
+
+  background: #89a3ff;
+  opacity: 0.2;
+  filter: blur(35.0779px);
+  transform: rotate(90deg);
+}
+
+.green {
+  position: absolute;
+  width: 305.57px;
+  height: 231.03px;
+  left: 1470.6px;
+  top: 0px;
+
+  background: #03cb34;
+  opacity: 0.2;
+  filter: blur(61.3863px);
+}
+
+.wrapper {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+}
